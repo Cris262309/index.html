@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taco Break — Tacos en UVG</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --black:       #080907;
+  --dark:        #0e100d;
+  --surface:     #161914;
+  --surface2:    #1c201a;
+  --green:       #2a7a1f;
+  --green-mid:   #38a028;
+  --green-bright:#4ec93d;
+  --green-glow:  rgba(56,160,40,0.18);
+  --cream:       #f2ede4;
+  --muted:       #7a7d76;
+  --muted2:      #545750;
+  --white:       #ffffff;
+  --border:      rgba(255,255,255,0.07);
+  --border-g:    rgba(56,160,40,0.25);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--black);
+  color: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── LOGO SVG ─────────────────────────────────────── */
+.logo-svg { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+.logo-svg svg { width: 34px; height: 34px; }
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 700;
+  letter-spacing: 0.08em; color: var(--cream);
+  text-transform: uppercase;
+}
+
+/* ─── NAV ──────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 22px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.4s;
+}
+nav.scrolled {
+  background: rgba(8,9,7,0.95);
+  backdrop-filter: blur(24px);
+  padding: 15px 56px;
+  border-bottom: 1px solid var(--border-g);
+}
+.nav-links { display: flex; gap: 36px; list-style: none; align-items: center; }
+.nav-links a {
+  color: var(--cream); text-decoration: none;
+  font-size: 0.8rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  opacity: 0.65; transition: opacity 0.2s, color 0.2s;
+}
+.nav-links a:hover { opacity: 1; color: var(--green-bright); }
+
+/* Interactive hover button — nav CTA */
+.nav-cta-wrap { position: relative; }
+.ihb {
+  position: relative; display: inline-flex; align-items: center;
+  overflow: hidden; border-radius: 6px;
+  border: 1px solid var(--green-mid);
+  background: transparent; cursor: pointer;
+  padding: 0; height: 40px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--cream); text-decoration: none;
+  min-width: 148px; justify-content: center;
+  transition: border-color 0.3s;
+}
+.ihb:hover { border-color: var(--green-bright); }
+.ihb-label {
+  position: relative; z-index: 2;
+  transition: transform 0.32s cubic-bezier(.4,0,.2,1), opacity 0.32s;
+  white-space: nowrap; padding: 0 22px;
+}
+.ihb:hover .ihb-label { transform: translateX(40px); opacity: 0; }
+.ihb-hover {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transform: translateX(-40px); opacity: 0;
+  transition: transform 0.32s cubic-bezier(.4,0,.2,1), opacity 0.32s;
+  color: var(--black); font-weight: 700; white-space: nowrap;
+}
+.ihb:hover .ihb-hover { transform: translateX(0); opacity: 1; }
+.ihb-bg {
+  position: absolute; left: 18%; top: 38%; width: 8px; height: 8px;
+  border-radius: 50%; background: var(--green-bright);
+  transition: all 0.38s cubic-bezier(.4,0,.2,1);
+  transform: scale(1);
+}
+.ihb:hover .ihb-bg {
+  left: 0%; top: 0%;
+  width: 100%; height: 100%;
+  border-radius: 6px;
+  transform: scale(1.6);
+}
+.ihb-arrow { width: 15px; height: 15px; stroke: var(--black); stroke-width: 2.2; fill: none; }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+.hamburger span { width: 22px; height: 2px; background: var(--cream); border-radius: 2px; transition: 0.3s; display: block; }
+
+/* ─── HERO ─────────────────────────────────────────── */
+#hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 0 56px; position: relative; overflow: hidden;
+}
+.hero-bg-gradient {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 55% 45%, rgba(42,122,31,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 20% 75%, rgba(42,122,31,0.08) 0%, transparent 60%),
+    var(--black);
+}
+.hero-noise {
+  position: absolute; inset: 0; opacity: 0.035; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+.hero-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(56,160,40,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,160,40,0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 75%);
+}
+
+.hero-inner {
+  position: relative; z-index: 2;
+  max-width: 1100px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 420px; gap: 80px; align-items: center;
+}
+.hero-content {}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: rgba(56,160,40,0.1); border: 1px solid rgba(56,160,40,0.3);
+  border-radius: 100px; padding: 7px 18px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--green-bright);
+  margin-bottom: 28px;
+  animation: fadeUp 0.7s ease both;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-bright); animation: pulseDot 2s infinite; }
+@keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.7)} }
+
+.hero-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.2rem, 6.5vw, 6.2rem);
+  font-weight: 900; line-height: 1;
+  letter-spacing: -0.025em;
+  animation: fadeUp 0.7s 0.08s ease both;
+}
+.hero-h1 .accent { color: var(--green-bright); display: block; font-style: italic; }
+.hero-desc {
+  margin: 24px 0 40px;
+  font-size: 1rem; color: var(--muted); line-height: 1.75;
+  max-width: 440px;
+  animation: fadeUp 0.7s 0.16s ease both;
+}
+.hero-btns {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  animation: fadeUp 0.7s 0.24s ease both;
+}
+
+/* Primary CTA — interactive hover */
+.ihb-primary {
+  min-width: 200px; height: 52px;
+  font-size: 0.88rem;
+  border-radius: 8px;
+  border: none;
+}
+.ihb-primary .ihb-bg { background: var(--green-bright); left: 16%; top: 36%; }
+.ihb-primary.ihb { border: none; background: var(--green); }
+.ihb-primary:hover { border-color: transparent; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--cream);
+  height: 52px; padding: 0 28px; border-radius: 8px;
+  font-size: 0.88rem; font-weight: 500;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: border-color 0.25s, background 0.25s;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+
+.hero-stats {
+  display: flex; gap: 48px; margin-top: 56px;
+  padding-top: 40px; border-top: 1px solid var(--border);
+  animation: fadeUp 0.7s 0.32s ease both;
+}
+.stat-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.9rem; font-weight: 700; color: var(--green-bright);
+  line-height: 1;
+}
+.stat-lbl { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 5px; }
+
+/* Hero visual — bento-inspired card stack */
+.hero-visual {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+.hv-card {
+  background: var(--surface); border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden; position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.hv-card:hover { border-color: var(--border-g); transform: translateY(-4px); }
+.hv-card.tall { grid-row: span 2; }
+.hv-img {
+  width: 100%; height: 100%; min-height: 160px;
+  object-fit: cover; display: block;
+  filter: brightness(0.85) saturate(1.1);
+}
+.hv-label {
+  position: absolute; bottom: 12px; left: 12px; right: 12px;
+  background: rgba(8,9,7,0.82); backdrop-filter: blur(10px);
+  border-radius: 8px; padding: 10px 14px;
+  border: 1px solid var(--border);
+}
+.hv-label-name { font-size: 0.85rem; font-weight: 600; }
+.hv-label-price { font-size: 0.78rem; color: var(--green-bright); margin-top: 2px; }
+.hv-badge-live {
+  position: absolute; top: 12px; left: 12px;
+  background: var(--green); border-radius: 100px;
+  padding: 4px 10px; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: white;
+  display: flex; align-items: center; gap: 5px;
+}
+.live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green-bright); animation: pulseDot 1.5s infinite; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+/* ─── SECTION BASE ─────────────────────────────────── */
+section { padding: 88px 56px; }
+.container { max-width: 1100px; margin: 0 auto; }
+.sec-label {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--green-bright); margin-bottom: 14px;
+}
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+  font-weight: 700; line-height: 1.15; margin-bottom: 18px;
+}
+
+/* ─── BENTO MENU ───────────────────────────────────── */
+#menu { background: var(--dark); }
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 14px; margin-top: 52px;
+}
+.bento-card {
+  background: var(--surface); border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden; position: relative;
+  display: flex; flex-direction: column;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  cursor: default;
+}
+.bento-card:hover {
+  border-color: var(--border-g);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(56,160,40,0.1);
+  transform: translateY(-6px);
+}
+.bento-card.featured {
+  grid-column: span 2;
+}
+.bento-img-wrap { height: 220px; overflow: hidden; position: relative; }
+.bento-img-wrap img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8) saturate(1.15); transition: transform 0.5s; display: block; }
+.bento-card:hover .bento-img-wrap img { transform: scale(1.04); }
+.bento-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(8,9,7,0.7) 100%);
+}
+.bento-body { padding: 22px 24px 24px; flex: 1; display: flex; flex-direction: column; }
+.bento-tag {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 4px; margin-bottom: 10px;
+}
+.tag-green { background: rgba(56,160,40,0.15); color: var(--green-bright); }
+.tag-fire  { background: rgba(220,60,40,0.15); color: #f07050; }
+.tag-earth { background: rgba(140,100,50,0.15); color: #c8a060; }
+
+.bento-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;
+}
+.bento-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 20px; }
+.bento-footer {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  border-top: 1px solid var(--border); padding-top: 16px;
+}
+.bento-price {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.6rem; font-weight: 700; color: var(--green-bright); line-height: 1;
+}
+.bento-price-sub { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+.bento-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: 1px solid var(--border-g);
+  border-radius: 6px; padding: 8px 16px;
+  font-size: 0.78rem; font-weight: 600; color: var(--green-bright);
+  text-decoration: none; cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.bento-cta:hover { background: var(--green-glow); transform: translateX(3px); }
+.bento-cta svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+
+/* ─── HOW TO ORDER ─────────────────────────────────── */
+#como-pedir { background: var(--black); }
+.order-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: center;
+}
+.steps { display: flex; flex-direction: column; }
+.step {
+  display: flex; gap: 24px; padding: 26px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.step:last-child { border-bottom: none; }
+.step-n {
+  width: 42px; height: 42px; min-width: 42px;
+  border-radius: 50%; border: 1px solid var(--border-g);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem; font-weight: 700; color: var(--green-bright);
+  transition: background 0.2s, border-color 0.2s;
+}
+.step:hover .step-n { background: var(--green-glow); border-color: var(--green-bright); }
+.step-body h3 { font-size: 0.97rem; font-weight: 600; margin-bottom: 6px; }
+.step-body p { font-size: 0.84rem; color: var(--muted); line-height: 1.65; }
+
+/* Phone mockup */
+.phone-wrap {
+  display: flex; justify-content: center;
+}
+.phone {
+  width: 265px; background: var(--surface2);
+  border-radius: 40px; padding: 14px;
+  border: 1px solid var(--border);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(56,160,40,0.08);
+}
+.phone-notch {
+  width: 80px; height: 6px; border-radius: 3px;
+  background: var(--surface); margin: 0 auto 12px;
+}
+.phone-screen {
+  background: #ece5dd; border-radius: 28px;
+  padding: 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.chat-header {
+  display: flex; align-items: center; gap: 10px;
+  background: #075e54; border-radius: 12px 12px 0 0;
+  padding: 10px 12px; margin: -14px -14px 0;
+}
+.chat-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--green-mid); display: flex; align-items: center; justify-content: center;
+}
+.chat-avatar svg { width: 18px; height: 18px; }
+.chat-hname { font-size: 0.8rem; font-weight: 600; color: white; }
+.chat-hstatus { font-size: 0.65rem; color: rgba(255,255,255,0.6); }
+.chat-msgs { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; }
+.cb { max-width: 88%; padding: 8px 12px; border-radius: 10px; font-size: 0.75rem; line-height: 1.5; }
+.cin  { background: white; align-self: flex-start; border-radius: 2px 10px 10px 10px; color: #222; }
+.cout { background: #d9fdd3; align-self: flex-end; border-radius: 10px 2px 10px 10px; color: #222; }
+.ct { font-size: 0.6rem; color: #999; text-align: right; margin-top: 3px; display: flex; align-items: center; justify-content: flex-end; gap: 3px; }
+
+/* ─── WHY GRID ─────────────────────────────────────── */
+#por-que { background: var(--surface); }
+.why-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; margin-top: 52px;
+}
+.why-card {
+  background: var(--dark); padding: 36px 30px;
+  transition: background 0.25s;
+}
+.why-card:hover { background: #0c0f0b; }
+.why-icon-wrap {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(56,160,40,0.1); border: 1px solid var(--border-g);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px; transition: background 0.25s;
+}
+.why-card:hover .why-icon-wrap { background: rgba(56,160,40,0.18); }
+.why-icon-wrap svg { width: 20px; height: 20px; stroke: var(--green-bright); stroke-width: 1.8; fill: none; }
+.why-card h3 { font-size: 0.97rem; font-weight: 600; margin-bottom: 8px; }
+.why-card p { font-size: 0.84rem; color: var(--muted); line-height: 1.65; }
+
+/* ─── EVIDENCE ─────────────────────────────────────── */
+#evidencia { background: var(--black); }
+.ev-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+.testimonials { display: flex; flex-direction: column; gap: 14px; }
+.tcard {
+  background: var(--surface); border-radius: 12px; padding: 22px 24px;
+  border-left: 3px solid var(--green-mid);
+  transition: transform 0.25s, border-left-color 0.25s;
+}
+.tcard:hover { transform: translateX(5px); border-left-color: var(--green-bright); }
+.tcard p { font-size: 0.9rem; line-height: 1.7; color: var(--cream); font-style: italic; margin-bottom: 10px; }
+.tcard-author { font-size: 0.74rem; font-weight: 700; color: var(--green-bright); letter-spacing: 0.08em; text-transform: uppercase; }
+
+.insights-panel {
+  background: var(--surface); border-radius: 16px; padding: 30px;
+  border: 1px solid var(--border-g);
+  position: sticky; top: 100px;
+}
+.insights-panel h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 700; margin-bottom: 24px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.insight {
+  display: flex; gap: 14px; align-items: flex-start; margin-bottom: 20px;
+}
+.insight:last-child { margin-bottom: 0; }
+.insight-icon {
+  width: 36px; height: 36px; min-width: 36px; border-radius: 8px;
+  background: rgba(56,160,40,0.1); border: 1px solid var(--border-g);
+  display: flex; align-items: center; justify-content: center;
+}
+.insight-icon svg { width: 16px; height: 16px; stroke: var(--green-bright); stroke-width: 2; fill: none; }
+.insight h4 { font-size: 0.86rem; font-weight: 600; margin-bottom: 3px; }
+.insight p { font-size: 0.8rem; color: var(--muted); line-height: 1.55; }
+
+/* ─── TIMELINE ─────────────────────────────────────── */
+#horario { background: var(--dark); }
+.sched-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: ''; position: absolute;
+  left: 7px; top: 20px; bottom: 20px; width: 2px;
+  background: linear-gradient(to bottom, var(--green), transparent);
+}
+.tl-item { position: relative; margin-bottom: 28px; }
+.tl-item:last-child { margin-bottom: 0; }
+.tl-dot {
+  position: absolute; left: -31px; top: 16px;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--green-mid); background: var(--black);
+  transition: background 0.3s;
+}
+.tl-item.active .tl-dot { background: var(--green-bright); border-color: var(--green-bright); box-shadow: 0 0 12px rgba(78,201,61,0.5); }
+.tl-time {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem; font-weight: 600; color: var(--green-bright);
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px;
+}
+.tl-card {
+  background: var(--surface); border-radius: 10px; padding: 14px 18px;
+  border: 1px solid var(--border);
+}
+.tl-item.active .tl-card { border-color: var(--border-g); }
+.tl-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 3px; }
+.tl-card p { font-size: 0.8rem; color: var(--muted); }
+
+.sched-copy .sec-title { margin-bottom: 16px; }
+.sched-copy p { font-size: 0.92rem; color: var(--muted); line-height: 1.75; margin-bottom: 14px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(56,160,40,0.08); border: 1px solid var(--border-g);
+  border-radius: 100px; padding: 7px 14px;
+  font-size: 0.78rem; font-weight: 500; color: var(--cream);
+}
+.pill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green-bright); }
+
+/* ─── ABOUT / AUTHOR ───────────────────────────────── */
+#acerca { background: var(--surface); }
+.about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.about-copy .sec-title { margin-bottom: 16px; }
+.about-copy p { font-size: 0.92rem; color: var(--muted); line-height: 1.75; margin-bottom: 12px; }
+.about-card {
+  background: var(--dark); border-radius: 16px; padding: 32px;
+  border: 1px solid var(--border-g);
+}
+.about-card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.about-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), var(--green-bright));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: white;
+}
+.about-name { font-size: 1rem; font-weight: 700; margin-bottom: 3px; }
+.about-role { font-size: 0.78rem; color: var(--muted); }
+.about-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.about-tag {
+  font-size: 0.72rem; font-weight: 600; padding: 4px 10px; border-radius: 4px;
+  background: rgba(56,160,40,0.1); color: var(--green-bright);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.about-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.65; margin-top: 16px; }
+
+/* ─── CTA ──────────────────────────────────────────── */
+#cta {
+  background: var(--black); text-align: center;
+  padding: 100px 56px; position: relative; overflow: hidden;
+}
+#cta::before {
+  content: ''; position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 700px; height: 500px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(42,122,31,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+.cta-h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 900; line-height: 1.1;
+  margin-bottom: 18px;
+}
+.cta-h2 span { color: var(--green-bright); font-style: italic; }
+.cta-p { color: var(--muted); font-size: 1rem; line-height: 1.7; margin-bottom: 44px; }
+
+/* Big interactive hover button */
+.ihb-cta {
+  min-width: 260px; height: 58px;
+  font-size: 0.95rem; border-radius: 10px;
+  border: none; background: var(--green);
+}
+.ihb-cta .ihb-bg { background: var(--green-bright); left: 14%; top: 34%; width: 10px; height: 10px; }
+.ihb-cta .ihb-label { color: white; font-weight: 700; letter-spacing: 0.08em; }
+
+.cta-tel { font-size: 0.84rem; color: var(--muted); margin-top: 20px; }
+.cta-tel a { color: var(--green-bright); text-decoration: none; font-weight: 500; }
+.cta-tel a:hover { text-decoration: underline; }
+
+/* ─── FOOTER ───────────────────────────────────────── */
+footer {
+  background: var(--dark); border-top: 1px solid var(--border);
+  padding: 44px 56px 32px;
+}
+.footer-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 28px; margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+.footer-links a { font-size: 0.78rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--green-bright); }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-copy { font-size: 0.76rem; color: var(--muted2); }
+.footer-author { font-size: 0.76rem; color: var(--muted2); }
+.footer-author a { color: var(--green-bright); text-decoration: none; font-weight: 500; }
+
+/* ─── WA FLOAT ─────────────────────────────────────── */
+.wa-btn {
+  position: fixed; bottom: 28px; right: 28px; z-index: 200;
+  display: flex; align-items: center; gap: 10px;
+  background: #128C7E; color: white;
+  border-radius: 50px; padding: 13px 20px 13px 16px;
+  text-decoration: none; font-size: 0.82rem; font-weight: 600;
+  box-shadow: 0 8px 30px rgba(18,140,126,0.4);
+  transition: transform 0.25s, box-shadow 0.25s;
+  animation: waIn 1s 1.2s ease both;
+}
+.wa-btn svg { width: 22px; height: 22px; fill: white; flex-shrink: 0; }
+.wa-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(18,140,126,0.5); }
+@keyframes waIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* ─── MOBILE NAV ───────────────────────────────────── */
+.mobile-menu {
+  display: none; position: fixed; inset: 0; z-index: 99;
+  background: var(--black); flex-direction: column;
+  align-items: center; justify-content: center; gap: 28px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700;
+  color: var(--cream); text-decoration: none; transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--green-bright); }
+.m-close { position: absolute; top: 22px; right: 24px; font-size: 1.6rem; cursor: pointer; color: var(--muted); background: none; border: none; }
+
+/* ─── SCROLL REVEAL ────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.1s; }
+.d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; }
+
+/* ─── SCROLL INDICATOR ─────────────────────────────── */
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  opacity: 0.3;
+}
+.scroll-hint span { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; }
+.scroll-line { width: 1px; height: 36px; background: currentColor; }
+
+/* ─── RESPONSIVE ───────────────────────────────────── */
+@media(max-width: 960px) {
+  nav, nav.scrolled { padding: 18px 24px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  section { padding: 64px 24px; }
+  #hero { padding: 0 24px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-visual { display: none; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .bento-card.featured { grid-column: span 1; }
+  .order-layout { grid-template-columns: 1fr; gap: 48px; }
+  .why-grid { grid-template-columns: 1fr; gap: 1px; }
+  .ev-layout { grid-template-columns: 1fr; }
+  .sched-layout { grid-template-columns: 1fr; gap: 48px; }
+  .about-layout { grid-template-columns: 1fr; }
+  .footer-top { flex-direction: column; align-items: flex-start; }
+  .footer-bottom { flex-direction: column; gap: 6px; }
+  #cta { padding: 72px 24px; }
+  footer { padding: 36px 24px 24px; }
+  .wa-btn .wa-label { display: none; }
+  .wa-btn { padding: 13px; border-radius: 50%; }
+}
+@media(max-width: 480px) {
+  .hero-h1 { font-size: 2.6rem; }
+  .hero-btns { flex-direction: column; }
+  .hero-stats { gap: 28px; flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo-svg" aria-label="Taco Break">
+    <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 24C5 24 8 14 17 12C26 10 30 18 30 18" stroke="#4ec93d" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M5 24C5 24 9 20 17 20C25 20 30 18 30 18" stroke="#f2ede4" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M5 24Q17.5 26 30 18" stroke="#f2ede4" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+    </svg>
+    <span class="logo-text">Taco Break</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#como-pedir">Cómo pedir</a></li>
+    <li><a href="#horario">Horario</a></li>
+    <li><a href="#acerca">Nosotros</a></li>
+    <li>
+      <a href="https://wa.me/50230584215" class="ihb" style="text-decoration:none">
+        <span class="ihb-label">Pedir ahora</span>
+        <span class="ihb-hover">
+          Pedir ahora
+          <svg class="ihb-arrow" viewBox="0 0 15 15"><path d="M3 7.5h9M8 4l4 3.5L8 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="ihb-bg"></span>
+      </a>
+    </li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="m-close" id="mobileClose">✕</button>
+  <a href="#menu" onclick="closeMobile()">Menú</a>
+  <a href="#como-pedir" onclick="closeMobile()">Cómo pedir</a>
+  <a href="#horario" onclick="closeMobile()">Horario</a>
+  <a href="#acerca" onclick="closeMobile()">Nosotros</a>
+  <a href="https://wa.me/50230584215" style="color:var(--green-bright)">Pedir ahora</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-gradient"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Viernes · UVG · Desde las 12:30 pm
+      </div>
+      <h1 class="hero-h1">
+        El break<br>
+        <span class="accent">que mereces</span>
+      </h1>
+      <p class="hero-desc">
+        Tacos auténticos entregados en tu campus. Sin fila, sin espera — pedís antes de las 11:30 am y recogés entre 12:30 y 1:30 pm.
+      </p>
+      <div class="hero-btns">
+        <a href="https://wa.me/50230584215?text=Hola!%20Quiero%20pedir%20tacos" class="ihb ihb-primary">
+          <span class="ihb-label">Hacer mi pedido</span>
+          <span class="ihb-hover">
+            Ir a WhatsApp
+            <svg class="ihb-arrow" viewBox="0 0 15 15"><path d="M3 7.5h9M8 4l4 3.5L8 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="ihb-bg"></span>
+        </a>
+        <a href="#menu" class="btn-ghost">Ver el menú &rarr;</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-val">3</div>
+          <div class="stat-lbl">Especialidades</div>
+        </div>
+        <div>
+          <div class="stat-val">Q25</div>
+          <div class="stat-lbl">Precio desde</div>
+        </div>
+        <div>
+          <div class="stat-val">0 min</div>
+          <div class="stat-lbl">Tiempo de fila</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bento hero cards -->
+    <div class="hero-visual">
+      <div class="hv-card tall">
+        <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80" alt="Al Pastor" class="hv-img">
+        <div class="hv-badge-live"><span class="live-dot"></span>Disponible viernes</div>
+        <div class="hv-label">
+          <div class="hv-label-name">Al Pastor</div>
+          <div class="hv-label-price">Q35 · 3 tacos</div>
+        </div>
+      </div>
+      <div class="hv-card">
+        <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&q=80" alt="Carne Asada" class="hv-img" style="min-height:130px">
+        <div class="hv-label">
+          <div class="hv-label-name">Carne Asada</div>
+          <div class="hv-label-price">Q30</div>
+        </div>
+      </div>
+      <div class="hv-card">
+        <img src="https://images.unsplash.com/photo-1611250188496-e966043a0629?w=400&q=80" alt="Cochinita Pibil" class="hv-img" style="min-height:130px">
+        <div class="hv-label">
+          <div class="hv-label-name">Cochinita Pibil</div>
+          <div class="hv-label-price">Q25</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-label">Especialidades</div>
+      <h2 class="sec-title">El menú que<br>tiene todo lo bueno</h2>
+    </div>
+    <div class="bento-grid">
+      <!-- Card 1: featured -->
+      <div class="bento-card featured reveal d1">
+        <div class="bento-img-wrap">
+          <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=900&q=80" alt="Al Pastor">
+          <div class="bento-overlay"></div>
+        </div>
+        <div class="bento-body">
+          <span class="bento-tag tag-fire">Popular</span>
+          <div class="bento-name">Al Pastor</div>
+          <div class="bento-desc">Cerdo marinado al estilo tradicional con achiote, especias y piña caramelizada. Cebolla morada y cilantro fresco. Una explosión de sabor en cada bocado.</div>
+          <div class="bento-footer">
+            <div>
+              <div class="bento-price">Q35</div>
+              <div class="bento-price-sub">porción de 3 tacos</div>
+            </div>
+            <a href="https://wa.me/50230584215?text=Quiero%20pedir%20Al%20Pastor" class="bento-cta">
+              Pedir
+              <svg viewBox="0 0 15 15"><path d="M3 7.5h9M8 4l4 3.5L8 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bento-card reveal d2">
+        <div class="bento-img-wrap">
+          <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=600&q=80" alt="Carne Asada">
+          <div class="bento-overlay"></div>
+        </div>
+        <div class="bento-body">
+          <span class="bento-tag tag-earth">Clásico</span>
+          <div class="bento-name">Carne Asada</div>
+          <div class="bento-desc">Carne jugosa y tierna, cebolla picada, cilantro fresco y limón. El clásico que nunca defrauda.</div>
+          <div class="bento-footer">
+            <div>
+              <div class="bento-price">Q30</div>
+              <div class="bento-price-sub">porción de 3 tacos</div>
+            </div>
+            <a href="https://wa.me/50230584215?text=Quiero%20pedir%20Carne%20Asada" class="bento-cta">
+              Pedir
+              <svg viewBox="0 0 15 15"><path d="M3 7.5h9M8 4l4 3.5L8 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bento-card reveal d3">
+        <div class="bento-img-wrap">
+          <img src="https://images.unsplash.com/photo-1611250188496-e966043a0629?w=600&q=80" alt="Cochinita Pibil">
+          <div class="bento-overlay"></div>
+        </div>
+        <div class="bento-body">
+          <span class="bento-tag tag-green">Especial</span>
+          <div class="bento-name">Cochinita Pibil</div>
+          <div class="bento-desc">Cerdo marinado en achiote y cítricos, cocido lentamente. Con cebolla morada encurtida y cilantro. La joya de Yucatán.</div>
+          <div class="bento-footer">
+            <div>
+              <div class="bento-price">Q25</div>
+              <div class="bento-price-sub">porción de 3 tacos</div>
+            </div>
+            <a href="https://wa.me/50230584215?text=Quiero%20pedir%20Cochinita%20Pibil" class="bento-cta">
+              Pedir
+              <svg viewBox="0 0 15 15"><path d="M3 7.5h9M8 4l4 3.5L8 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO ORDER -->
+<section id="como-pedir">
+  <div class="container">
+    <div class="order-layout">
+      <div>
+        <div class="sec-label reveal">Proceso</div>
+        <h2 class="sec-title reveal">Sin filas.<br>Sin esperas.</h2>
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step-n">01</div>
+            <div class="step-body">
+              <h3>Escribí antes de las 11:30 am</h3>
+              <p>Mandá tu pedido por WhatsApp al +502 3058-4215. Indicá sabor, cantidad y forma de pago. Fácil y directo.</p>
+            </div>
+          </div>
+          <div class="step reveal d1">
+            <div class="step-n">02</div>
+            <div class="step-body">
+              <h3>Confirmamos tu orden</h3>
+              <p>Te confirmamos el pedido y coordinamos el punto exacto de entrega dentro del campus.</p>
+            </div>
+          </div>
+          <div class="step reveal d2">
+            <div class="step-n">03</div>
+            <div class="step-body">
+              <h3>Recogés entre 12:30 y 1:30 pm</h3>
+              <p>Llegás, recogés y listo. Sin fila. Efectivo o transferencia. Así de simple.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-wrap reveal">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="chat-header">
+              <div class="chat-avatar">
+                <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 24C5 24 8 14 17 12C26 10 30 18 30 18" stroke="#4ec93d" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M5 24C5 24 9 20 17 20C25 20 30 18 30 18" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="chat-hname">Taco Break</div>
+                <div class="chat-hstatus">en línea</div>
+              </div>
+            </div>
+            <div class="chat-msgs">
+              <div class="cb cin">Hola! Quiero unos taquitos</div>
+              <div class="cb cout">
+                Bienvenido a Taco Break!<br>
+                Carne asada Q30<br>
+                Pastor Q35<br>
+                Pibil Q25
+                <div class="ct">10:04 <svg width="12" height="8" viewBox="0 0 16 11" fill="#53bdeb"><path d="M1 6l4 4L15 1M6 10l4-4"/></svg></div>
+              </div>
+              <div class="cb cin">Una de pastor. Estoy en CIT615</div>
+              <div class="cb cout">
+                Perfecto! Efectivo o transferencia?
+                <div class="ct">10:05 <svg width="12" height="8" viewBox="0 0 16 11" fill="#53bdeb"><path d="M1 6l4 4L15 1M6 10l4-4"/></svg></div>
+              </div>
+              <div class="cb cin">Efectivo. Soy Will</div>
+              <div class="cb cout">
+                Listo Will! Te avisamos cuando lleguemos al CIT615.
+                <div class="ct">10:07 <svg width="12" height="8" viewBox="0 0 16 11" fill="#53bdeb"><path d="M1 6l4 4L15 1M6 10l4-4"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="por-que">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-label">Por qué elegirnos</div>
+      <h2 class="sec-title">Diseñado para<br>el ritmo universitario</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Cero tiempo perdido</h3>
+        <p>Pedís antes, llegás y recogés. No más filas de 20 minutos cuando tenés clase en media hora.</p>
+      </div>
+      <div class="why-card reveal d1">
+        <div class="why-icon-wrap">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Precio universitario</h3>
+        <p>Desde Q25 la porción de 3 tacos. Comida real, sabrosa y que no revienta el presupuesto semanal.</p>
+      </div>
+      <div class="why-card reveal d2">
+        <div class="why-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        </div>
+        <h3>Algo diferente</h3>
+        <p>Cansado de lo mismo en la U? Los tacos son la alternativa que faltaba en el campus.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>WhatsApp, nada más</h3>
+        <p>Sin apps, sin cuentas. Una app que ya tenés instalada es todo lo que necesitás.</p>
+      </div>
+      <div class="why-card reveal d1">
+        <div class="why-icon-wrap">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Entrega puntual</h3>
+        <p>Horario definido, punto claro. Organizamos el delivery para que vos no tengas que adivinar nada.</p>
+      </div>
+      <div class="why-card reveal d2">
+        <div class="why-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3>Pedido confirmado</h3>
+        <p>Cada orden se confirma individualmente. Tu taco te espera, no al revés.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVIDENCE -->
+<section id="evidencia">
+  <div class="container">
+    <div class="ev-layout">
+      <div>
+        <div class="sec-label reveal">Lo que dicen</div>
+        <h2 class="sec-title reveal">Real. De compañeros<br>como vos.</h2>
+        <div class="testimonials">
+          <div class="tcard reveal">
+            <p>"Normalmente compro en &Café porque queda cerca, pero la fila a veces es larga. Con Taco Break el pedido ya está listo cuando salgo de clase."</p>
+            <div class="tcard-author">Will &mdash; Estudiante UVG</div>
+          </div>
+          <div class="tcard reveal d1">
+            <p>"Compré tacos en Cayalá pero no puedo ir seguido porque queda lejos. Que haya algo similar dentro del campus lo cambia todo."</p>
+            <div class="tcard-author">Luis &mdash; Estudiante UVG</div>
+          </div>
+          <div class="tcard reveal d2">
+            <p>"La salsa de aguacate es lo mejor. Poder personalizar el picante hace que valga mucho más la experiencia."</p>
+            <div class="tcard-author">Kayla &mdash; Estudiante UVG</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insights-panel reveal">
+        <h3>Lo que encontramos</h3>
+        <div class="insight">
+          <div class="insight-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <h4>La rapidez lo decide todo</h4>
+            <p>El 100% de los entrevistados compra donde hay menor tiempo de espera entre clases.</p>
+          </div>
+        </div>
+        <div class="insight">
+          <div class="insight-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <h4>La distancia importa</h4>
+            <p>Salir del campus reduce la frecuencia de compra. Lo que está dentro se consume más.</p>
+          </div>
+        </div>
+        <div class="insight">
+          <div class="insight-icon">
+            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          </div>
+          <div>
+            <h4>Gap real de tacos</h4>
+            <p>Las opciones del campus son repetitivas. Los tacos son una alternativa atractiva y diferente.</p>
+          </div>
+        </div>
+        <div class="insight">
+          <div class="insight-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <h4>WhatsApp es el canal natural</h4>
+            <p>+18M guatemaltecos usan WhatsApp. El 59% ya lo usa para coordinar compras o pedidos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="horario">
+  <div class="container">
+    <div class="sched-layout">
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">Antes de 11:30 am</div>
+          <div class="tl-card">
+            <h4>Cierre de pedidos</h4>
+            <p>Último momento para enviar tu pedido por WhatsApp</p>
+          </div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="tl-time">12:30 pm</div>
+          <div class="tl-card">
+            <h4>Inicio de entrega</h4>
+            <p>Empezamos a entregar en el punto acordado dentro del campus</p>
+          </div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="tl-time">1:30 pm</div>
+          <div class="tl-card">
+            <h4>Fin de ventana</h4>
+            <p>Los pedidos confirmados fueron entregados. Cupos limitados.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">Cada viernes</div>
+          <div class="tl-card">
+            <h4>Disponibilidad semanal</h4>
+            <p>Todos los viernes en UVG. Los cupos se agotan — pedí temprano.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sched-copy reveal">
+        <div class="sec-label">Horario de operación</div>
+        <h2 class="sec-title">Cada viernes<br>en tu campus</h2>
+        <p>El sistema de pedido anticipado existe para que no pierdas tiempo. Pedís antes de las 11:30, nosotros coordinamos la entrega, vos solo llegás y recogés.</p>
+        <p>Los cupos son limitados y van por orden de llegada al chat. Los viernes más movidos se agotan rápido.</p>
+        <div class="pills">
+          <span class="pill"><span class="pill-dot"></span>Viernes</span>
+          <span class="pill"><span class="pill-dot"></span>Pedidos hasta 11:30 am</span>
+          <span class="pill"><span class="pill-dot"></span>Entrega 12:30&ndash;1:30 pm</span>
+          <span class="pill"><span class="pill-dot"></span>Campus UVG</span>
+          <span class="pill"><span class="pill-dot"></span>Efectivo o transferencia</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / AUTHOR -->
+<section id="acerca">
+  <div class="container">
+    <div class="about-layout">
+      <div class="about-copy reveal">
+        <div class="sec-label">Nosotros</div>
+        <h2 class="sec-title">Un emprendimiento<br>universitario real</h2>
+        <p>Taco Break nació como una idea simple: resolver el problema de comida rápida, accesible y diferente dentro del campus de la UVG. Validamos la idea con entrevistas reales, un MVP por WhatsApp y datos de mercado — antes de invertir un quetzal en infraestructura.</p>
+        <p>Somos un grupo de estudiantes que aplicó la metodología Lean Startup para construir algo real desde cero. Cada pedido que llega es validación de que la hipótesis era correcta.</p>
+      </div>
+      <div class="about-card reveal d1">
+        <div class="about-card-header">
+          <div class="about-avatar">CB</div>
+          <div>
+            <div class="about-name">Cristopher Bollat</div>
+            <div class="about-role">Diseño web &amp; Estrategia digital</div>
+          </div>
+        </div>
+        <div class="about-tags">
+          <span class="about-tag">Lean Startup</span>
+          <span class="about-tag">MVP</span>
+          <span class="about-tag">UVG</span>
+          <span class="about-tag">Emprendimiento</span>
+        </div>
+        <div class="about-desc">Responsable del diseño de la experiencia digital, investigación de mercado y arquitectura de la estrategia de validación de Taco Break.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="sec-label reveal">Listo para pedir?</div>
+    <h2 class="cta-h2 reveal">
+      Aparta tus tacos<br>
+      antes de que se<br>
+      <span>acaben.</span>
+    </h2>
+    <p class="cta-p reveal">
+      Escribinos por WhatsApp antes de las 11:30 am del viernes. 30 segundos y tu orden queda confirmada.
+    </p>
+    <a href="https://wa.me/50230584215?text=Hola!%20Quiero%20pedir%20tacos%20para%20este%20viernes" class="ihb ihb-cta reveal">
+      <span class="ihb-label">Escribir a Taco Break</span>
+      <span class="ihb-hover">
+        Abrir WhatsApp
+        <svg class="ihb-arrow" viewBox="0 0 15 15"><path d="M3 7.5h9M8 4l4 3.5L8 11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="ihb-bg"></span>
+    </a>
+    <p class="cta-tel reveal">O escríbenos directo al <a href="https://wa.me/50230584215">+502 3058-4215</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <a href="#" class="logo-svg">
+      <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+        <path d="M5 24C5 24 8 14 17 12C26 10 30 18 30 18" stroke="#4ec93d" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M5 24C5 24 9 20 17 20C25 20 30 18 30 18" stroke="#f2ede4" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-text" style="font-size:1rem">Taco Break</span>
+    </a>
+    <nav class="footer-links">
+      <a href="#menu">Menú</a>
+      <a href="#como-pedir">Cómo pedir</a>
+      <a href="#horario">Horario</a>
+      <a href="#acerca">Nosotros</a>
+      <a href="https://wa.me/50230584215">WhatsApp</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2026 Taco Break &mdash; Tacos en UVG &middot; Viernes &middot; Pedidos por WhatsApp</span>
+    <span class="footer-author">Diseñado y desarrollado por <a href="#">Cristopher Bollat</a></span>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/50230584215?text=Hola!%20Quiero%20pedir%20tacos" class="wa-btn" aria-label="WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M11.999 2C6.478 2 2 6.478 2 12c0 1.85.504 3.585 1.38 5.08L2 22l5.05-1.357A9.966 9.966 0 0 0 12 22c5.522 0 10-4.478 10-10S17.521 2 11.999 2zm.001 18a7.96 7.96 0 0 1-4.073-1.117l-.292-.173-3.001.807.82-2.924-.19-.3A7.958 7.958 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/>
+  </svg>
+  <span class="wa-label">Pedir ahora</span>
+</a>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60), { passive: true });
+
+// Hamburger
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+document.getElementById('mobileClose').onclick = closeMobile;
+hamburger.onclick = () => mobileMenu.classList.add('open');
+function closeMobile() { mobileMenu.classList.remove('open'); }
+
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(el => ro.observe(el));
+
+// Smooth anchor
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); closeMobile(); }
+  });
+});
+</script>
+</body>
+</html>
